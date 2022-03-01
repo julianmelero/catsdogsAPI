@@ -33,10 +33,12 @@ def post_image(
     imagen_resize = imagen.resize((150,150))    
     # Load to numpy as array
     image_np = np.array(imagen_resize)#.astype('uint8') 
-    image_np.reshape([0,255,255,3])
+    # image_np.reshape([0,255,255,3])
+    image_np[0] = image_np[0] / 255
+    image_np[1] = image_np[1] / 255   
+    image_np = np.expand_dims(image_np,0)
 
-    # image_np[0] = image_np[0] / 255
-    # image_np[1] = image_np[1] / 255   
+    
     # image_np = tf.reshape(imagen, [150,150])
     
     # Image gray, because I need 1 channel
@@ -46,7 +48,7 @@ def post_image(
     # Seek image for read again
     image.file.seek(0)
     model =  keras.models.load_model(os.path.join("model","catsdogs.h5"))
-    model.predict(image_np)
+    print(model.predict(image_np))
     return {
         "Filename": image.filename,
         "Format": image.content_type,
