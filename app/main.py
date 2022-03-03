@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 
 # Routes
-from routers import catsdogs
+from .routers import catsdogs
 
 
 app = FastAPI(prefix="/api/v1")

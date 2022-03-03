@@ -1,12 +1,9 @@
 #Python
-
-from ast import Bytes
 import os
-import json
+
 
 
 # FastAPI
-from io import BytesIO
 from fastapi import APIRouter, File, UploadFile, HTTPException,status
 
 # External
@@ -15,9 +12,6 @@ from PIL import Image
 import io
 import cv2
 import keras
-import tensorflow as tf
-
-
 
 
 
@@ -43,9 +37,9 @@ def post_image(
     imagen = np.array(imagen).astype(float)
     imagen = imagen / 255    
     image_np = np.expand_dims(imagen,axis=0)    
+        
+    model =  keras.models.load_model(os.path.join("app/model","dogs-cats-cnn-ad.h5"))
     
-    
-    model =  keras.models.load_model(os.path.join("model","dogs-cats-cnn-ad.h5"))
     prediction = model.predict(image_np)
     print(prediction[0][0])
     if prediction[0][0] <= 0.5:
