@@ -1,5 +1,6 @@
 #Python
 
+from ast import Bytes
 import os
 import json
 
@@ -11,9 +12,14 @@ from fastapi import APIRouter, File, UploadFile, HTTPException,status
 # External
 import numpy as np
 from PIL import Image
+import io
 import cv2
 import keras
 import tensorflow as tf
+
+
+
+
 
 router = APIRouter(
     prefix="/catsdogs"
@@ -23,14 +29,12 @@ IMAGES_ACCEPTED = ["image/png","image/jpeg","image/jpg"]
 
 @router.post(path="/post-image", tags=["CatsDogs"])
 def post_image(
-    image: UploadFile = File(...)
+    image: UploadFile = File(...)   
 ):
-    if image.content_type not in IMAGES_ACCEPTED:
-        raise HTTPException(status_code=status.HTTP_406_NOT_ACCEPTABLE,detail="Image accepted type " + str(IMAGES_ACCEPTED))
-          
-    # I load the image with Pillow
     
-    imagen = Image.open(BytesIO(image.file.read()))       
+   
+    imagen = Image.open(io.BytesIO(image.file.read()))       
+   
     
     imagen = np.array(imagen).astype('uint16')
     imagen = cv2.resize(imagen,(100, 100))
@@ -53,3 +57,4 @@ def post_image(
         "predict": pred,
         "prediction":  round(float(prediction[0][0]),2)
     }
+    

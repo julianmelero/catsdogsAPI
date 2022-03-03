@@ -24,6 +24,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.mount("/model", StaticFiles(directory="model"), name="model")
+# app.mount("/model", StaticFiles(directory="model"), name="model")
 app.include_router(catsdogs.router, prefix="/api/v1")
 
