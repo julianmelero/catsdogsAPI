@@ -1,10 +1,8 @@
 fastapi==0.74.1
 pydantic==1.9.0
+uvicorn==0.17.5
 numpy==1.22.2
 python-multipart==0.0.5
 Pillow==9.0.1
 opencv-python==4.5.5.62
-opencv-python-headless==4.2.0.32
 keras==2.8.0
-Keras-Preprocessing==1.1.2
-uvicorn==0.17.5
