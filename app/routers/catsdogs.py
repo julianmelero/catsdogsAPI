@@ -19,6 +19,8 @@ router = APIRouter(
     prefix="/catsdogs"
     )
 
+model =  keras.models.load_model(os.path.join("app/model","dogs-cats-cnn-ad.h5"))
+
 IMAGES_ACCEPTED = ["image/png","image/jpeg","image/jpg"]
 
 @router.post(path="/post-image", tags=["CatsDogs"])
@@ -30,8 +32,7 @@ def post_image(
     imagen = Image.open(io.BytesIO(image.file.read()))       
    
     
-    imagen = np.array(imagen).astype('uint16')
-    print(imagen.shape)        
+    imagen = np.array(imagen).astype('uint16')     
     imagen = cv2.resize(imagen,(100, 100))
     imagen = cv2.cvtColor(imagen, cv2.COLOR_BGR2GRAY)
     # imagen = imagen.reshape(100,100,1)    
@@ -39,7 +40,7 @@ def post_image(
     imagen = imagen / 255    
     image_np = np.expand_dims(imagen,axis=0)    
         
-    model =  keras.models.load_model(os.path.join("app/model","dogs-cats-cnn-ad.h5"))
+    # model =  keras.models.load_model(os.path.join("app/model","dogs-cats-cnn-ad.h5"))
     
     prediction = model.predict(image_np)
     print(prediction[0][0])
