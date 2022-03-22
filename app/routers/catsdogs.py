@@ -1,10 +1,11 @@
 #Python
 import os
 
-
-
 # FastAPI
 from fastapi import APIRouter, File, UploadFile, HTTPException,status
+from app.model import model
+
+
 # External
 import numpy as np
 from PIL import Image
@@ -13,24 +14,28 @@ import cv2
 import keras
 import tensorflow as tf
 
+# from app.model.model import load_model
+
 
 
 router = APIRouter(
     prefix="/catsdogs"
     )
 
-os.environ['CUDA_VISIBLE_DEVICES'] = '-1' 
-model =  keras.models.load_model(os.path.join("app/model","dogs-cats-cnn-ad.h5"))
+# Cargamos el modelo
+model = model.load_model()
 
-IMAGES_ACCEPTED = ["image/png","image/jpeg","image/jpg"]
+
+
+IMAGES_ACCEPTED = ["image/png","image/jpeg","image/jpg","application/octet-stream"]
 
 @router.post(path="/post-image", tags=["CatsDogs"])
 def post_image(
     image: UploadFile = File(...)   
-):
-    print(image.content_type)
+):    
+    
     if image.content_type not in IMAGES_ACCEPTED:
-        raise HTTPException(status_code=502,
+        raise HTTPException(status_code=406,
         detail="Esto no es una imagen con formato correcto")
    
     imagen = Image.open(io.BytesIO(image.file.read()))       
@@ -44,13 +49,18 @@ def post_image(
     imagen = imagen / 255    
     image_np = np.expand_dims(imagen,axis=0)    
 
-
-    # os.environ['CUDA_VISIBLE_DEVICES'] = '-1' 
-    # model =  keras.models.load_model(os.path.join("app/model","dogs-cats-cnn-ad.h5"))
     
     prediction = model.predict(image_np)
     print(prediction[0][0])
-    if prediction[0][0] <= 0.5:
+
+    if prediction[0][0] >0.40 and prediction[0][0]<0.80:
+        pred = ":|"
+        return {
+            "predict": pred,
+            "prediction":  round(float(prediction[0][0]),2)
+        }
+
+    if prediction[0][0] <= 0.40:
         pred ="Cat"
     else:
         pred ="Dog"   
