@@ -11,11 +11,6 @@ import numpy as np
 from PIL import Image
 import io
 import cv2
-import keras
-import tensorflow as tf
-
-# from app.model.model import load_model
-
 
 
 router = APIRouter(
@@ -43,8 +38,7 @@ def post_image(
     
     imagen = np.array(imagen).astype('uint16')     
     imagen = cv2.resize(imagen,(100, 100))
-    imagen = cv2.cvtColor(imagen, cv2.COLOR_BGR2GRAY)
-    # imagen = imagen.reshape(100,100,1)    
+    imagen = cv2.cvtColor(imagen, cv2.COLOR_BGR2GRAY)       
     imagen = np.array(imagen).astype(float)
     imagen = imagen / 255    
     image_np = np.expand_dims(imagen,axis=0)    
