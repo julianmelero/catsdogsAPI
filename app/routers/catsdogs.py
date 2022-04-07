@@ -18,8 +18,10 @@ router = APIRouter(
     )
 
 # Cargamos el modelo
-model = model.load_model()
-
+try:
+    model = model.load_model()
+except:    
+    raise HTTPException(status_code=406, detail="No se ha podido cargar el modelo")
 
 
 IMAGES_ACCEPTED = ["image/png","image/jpeg","image/jpg","application/octet-stream"]
