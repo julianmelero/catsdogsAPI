@@ -6,3 +6,4 @@ python-multipart==0.0.5
 Pillow==9.0.1
 opencv-python==4.5.5.62
 tensorflow==2.8.0
+opencv-contrib-python-headless
